@@ -1,0 +1,38 @@
+server:
+  port: 8080   # Gateway runs on 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: accounts-service-route
+          uri: lb://accounts-service
+          predicates:
+            - Path=/accounts/**
+          filters:
+            - StripPrefix=1
+
+        - id: loans-service-route
+          uri: lb://loans-service
+          predicates:
+            - Path=/loans/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

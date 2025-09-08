@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+        - id : accounts-service-route
+          uri: lb://accounts-service
+          predicates:
+            - path=/accounts/**
+        - id : loans-service-route
+          uri: lb://loans-service
+          predicates:
+            - path=/loans/**
+    
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
